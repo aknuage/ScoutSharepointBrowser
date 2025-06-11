@@ -1,0 +1,14 @@
+<apex:page controller="SharePointOauthController" action="{!init}" showHeader="false" sidebar="false">
+  <apex:outputText value="Signing you in…" />
+    <script>
+    (function(){
+        try {
+        // broadcast to **any** origin — Lightning will pick it up
+        window.opener.postMessage('SP_AUTH_SUCCESS','*');
+        } catch(e) {
+        console.error(e);
+        }
+        window.close();
+    })();
+    </script>
+</apex:page>

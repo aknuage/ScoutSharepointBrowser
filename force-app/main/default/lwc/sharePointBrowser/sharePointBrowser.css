@@ -1,0 +1,276 @@
+.folder-path {
+    cursor: pointer;
+}
+.folder-path:hover {
+    text-decoration: underline;
+}
+
+.small-text {
+    font-size: 0.95em;
+}
+.smaller-text {
+    font-size: 0.9em;
+}
+
+.content-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Drop zone */
+.drop-zone {
+    border: 2px dashed #ccc;
+    padding: 2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.drop-zone:hover {
+    background-color: #f3f3f3;
+}
+
+/* Hide native file input */
+.hidden-file-input {
+    display: none;
+}
+
+/* Icon buttons */
+.icon-button {
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+.icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+.icon-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #0070d2;
+}
+
+/* Upload override */
+.upload-button {
+    height: 23px;
+    float: right;
+}
+
+/* Search animation wrapper */
+.search-slide-container {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+.search-slide-container.open {
+    max-height: 100px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Search input section */
+.searchbox-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #f4f6f9;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    width: 100%;
+    gap: 0.75rem;
+}
+
+/* Search input itself */
+.searchbox-input {
+    flex-grow: 1;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background-color: white;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+}
+
+/* Clear search button styled like other header icons */
+.search-clear-button {
+    padding: 0.25rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.search-clear-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Dropzone override (legacy use) */
+.fileClass .slds-file-selector__dropzone {
+    width: 75% !important;
+}
+/* Slide animation container */
+.search-slide-wrapper {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.search-slide-wrapper.open {
+    max-height: 80px; /* match actual rendered height */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Search box styling */
+.searchbox-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #f4f6f9;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    width: 100%;
+    gap: 0.75rem;
+}
+
+.searchbox-input {
+    flex-grow: 1;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background-color: white;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+}
+
+.search-clear-button {
+    padding: 0.25rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-clear-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+/* Animation container for search */
+.search-slide-wrapper {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.search-slide-wrapper.open {
+    max-height: 80px; /* or whatever the actual height is */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.searchbox-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #f4f6f9;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    width: 100%;
+    gap: 0.75rem;
+}
+
+.searchbox-input {
+    flex-grow: 1;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background-color: white;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+}
+
+.search-clear-button {
+    padding: 0.25rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-clear-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.searchbox-full {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    animation: slide-in-left 0.3s ease forwards;
+    position: relative;
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(10%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.contacts-label {
+  font-weight: 700;
+  font-size: .9rem;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Full action area wrapper */
+.action-wrapper {
+  display: flex;
+  align-items: center;
+  padding-bottom:.75rem;
+  width: 100%;
+}
+
+/* Row of controls when not searching */
+.action-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+/* sharePointBrowser.css */
+.login-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.login-card {
+  background-color: #f3f2f1; /* light neutral /* */
+  border-radius: 6px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ms-login-btn {
+  display: inline-flex;
+  align-items: center;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  /* more breathing room in MS style button */
+  padding: .6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ms-login-button img {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.5rem;
+}

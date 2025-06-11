@@ -1,0 +1,314 @@
+<template>
+  <!-- LOGIN PROMPT -->
+  <template if:true={isCheckingAuth}>
+      <!-- 1️⃣ While we’re verifying the token… -->
+    <div class="slds-p-around_medium slds-text-align_center">
+      <lightning-spinner alternative-text="Checking authentication" size="medium"></lightning-spinner>
+      <p>Checking SharePoint authentication…</p>
+    </div>
+  </template>
+   <!-- 2️⃣ If no token, show a nice “Sign in with Microsoft” card -->
+  <template lwc:if={showLoginScreen}>
+    <div class="login-container">
+      <div class="login-card">
+        <h1 class="title slds-m-bottom_small">
+          Connect to SharePoint to access Project files
+        </h1>
+        <button class="ms-login-btn" onclick={handleLoginClick}>
+          <!-- Microsoft “window” logo -->
+          <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+            <rect x="0"  y="0"  width="11" height="11" fill="#F35325"/>
+            <rect x="13" y="0"  width="11" height="11" fill="#81BC06"/>
+            <rect x="0"  y="13" width="11" height="11" fill="#05A6F0"/>
+            <rect x="13" y="13" width="11" height="11" fill="#FFBA08"/>
+          </svg>
+          <span class="slds-p-left_small">Sign in with Microsoft</span>
+        </button>
+      </div>
+    </div>
+  </template>
+
+  <!-- SHAREPOINT BROWSER AFTER AUTH -->
+  <template lwc:if={isAuthenticated}>
+    <article class="slds-card">
+      <div class="slds-card__body slds-card__body_inner container">
+
+        <!-- ACTION BAR -->
+        <div slot="actions" class="slds-grid slds-grid_align-end slds-grid_vertical-align-center action-wrapper">
+
+          <!-- Search input -->
+          <template if:true={showSearchInput}>
+            <div class="searchbox-full">
+              <lightning-input
+                type="search"
+                variant="label-hidden"
+                placeholder="Search files or folders..."
+                onchange={handleSearchKey}
+                class="searchbox-input">
+              </lightning-input>
+              <lightning-button-icon
+                icon-name="utility:close"
+                alternative-text="Dismiss Search"
+                size="medium"
+                onclick={toggleSearch}
+                class="searchbox-clear slds-m-left_xx-small">
+              </lightning-button-icon>
+            </div>
+          </template>
+
+          <!-- Default icons -->
+          <template if:false={showSearchInput}>
+            <div class="slds-col" style="flex-grow:1; display:flex; align-items:center; padding-left:0; margin-left:0;">
+              <span class="contacts-label slds-text-title_bold">Project SharePoint</span>
+            </div>
+            <lightning-button-icon 
+              class="slds-col slds-shrink-none slds-m-left_x-small"
+              icon-name="utility:chevronleft"  
+              onclick={handleBackClick}
+              alternative-text="Go back" 
+              title="Back"
+              disabled={disableBackButton}>
+            </lightning-button-icon>
+            <lightning-button-icon 
+              class="slds-col slds-shrink-none slds-m-left_x-small"
+              icon-name="action:upload"  
+              onclick={handleUploadOpen}
+              alternative-text="Upload File" 
+              title="Upload"
+              disabled={disableUploadButton}>
+            </lightning-button-icon>
+            <lightning-button-icon 
+              class="slds-col slds-shrink-none slds-m-left_x-small"
+              icon-name="utility:open_folder"  
+              onclick={handleCreateFolderOpen}
+              alternative-text="New Folder" 
+              title="New Folder"
+              disabled={disableFolderButton}>
+            </lightning-button-icon>
+            <lightning-button-icon 
+              class="slds-col slds-shrink-none slds-m-left_x-small"
+              icon-name="utility:refresh"  
+              onclick={refreshData}
+              alternative-text="Refresh" 
+              title="Refresh"
+              disabled={disableRefreshButton}>
+            </lightning-button-icon>
+            <lightning-button-icon
+              class="slds-col slds-shrink-none slds-m-left_x-small"
+              icon-name="utility:search"
+              alternative-text="Search"
+              onclick={toggleSearch}>
+            </lightning-button-icon>
+          </template>
+
+        </div>
+
+        <!-- LOADER -->
+        <template if:true={isLoading}>
+          <lightning-spinner size="small"></lightning-spinner>
+        </template>
+
+        <!-- BREADCRUMBS -->
+        <template if:true={breadcrumbs.length}>
+          <div class="smaller-text slds-m-bottom_small">
+            <template for:each={breadcrumbs} for:item="crumb">
+              <span key={crumb.label} class="folder-path">
+                <a href="#" onclick={handleBreadcrumbClick} data-index={crumb.index} class="slds-text-link">
+                  📁 {crumb.label}
+                </a>
+                <template if:true={crumb.isLast}>
+                  <span>&nbsp;&gt;&nbsp;</span>
+                </template>
+              </span>
+            </template>
+          </div>
+        </template>
+
+        <!-- FILE/FOLDER LIST -->
+        <div class="slds-m-bottom_medium content-container">
+          <template if:true={files.length}>
+            <ul class="slds-has-dividers_around-space">
+              <template for:each={files} for:item="file">
+                <li key={file.id} class="slds-grid slds-grid_align-spread slds-p-vertical_xx-small slds-p-horizontal_small">
+
+                  <!-- Icon + Name -->
+                  <div class="slds-grid slds-grid_vertical-align-center slds-col">
+                    <template if:true={file.folder}>
+                      <span 
+                        class="slds-text-link folder-path slds-text-body_regular"
+                        onclick={handleFolderClick}
+                        data-name={file.name}
+                        data-id={file.id}
+                        data-driveid={file.parentReference.driveId}>
+                        📁 {file.name}
+                      </span>
+                    </template>
+                    <template if:false={file.folder}>
+                      <lightning-icon icon-name={file.iconName} size="x-small" class="slds-m-right_small"></lightning-icon>
+                      <a 
+                        href={file.webUrl}
+                        data-id={file.id}
+                        data-driveid={file.driveId}
+                        data-name={file.name}
+                        onclick={handlePreviewClick}
+                        target="_blank"
+                        class="small-text">
+                        {file.name}
+                      </a>
+                    </template>
+                  </div>
+
+                  <!-- Size, Date, Delete -->
+                  <template if:false={file.folder}>
+                    <div class="slds-col slds-grid slds-grid_align-end slds-grid_vertical-align-center">
+                      <div class="slds-m-right_small slds-text-align_right smaller-text">
+                        <div>{file.formattedSize}</div>
+                        <div class="slds-text-color_weak">{file.formattedDate}</div>
+                      </div>
+                      <lightning-button-icon
+                        title="Delete"
+                        variant="bare"
+                        size="small"
+                        data-id={file.id}
+                        data-name={file.name}
+                        icon-name="utility:close"
+                        onclick={promptDeleteFile}>
+                      </lightning-button-icon>
+                    </div>
+                  </template>
+
+                </li>
+              </template>
+            </ul>
+          </template>
+
+          <!-- ERROR MESSAGE -->
+          <template if:true={error}>
+            <div class="slds-text-color_error slds-m-top_small">{error.message}</div>
+          </template>
+        </div>
+
+        <!-- PREVIEW MODAL -->
+        <template if:true={showPreviewModal}>
+          <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <header class="slds-modal__header">
+                <button 
+                  class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                  title="Close" 
+                  onclick={closePreviewModal}>
+                  <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                </button>
+                <h2 class="slds-modal__title slds-hyphenate">{previewFileName}</h2>
+              </header>
+              <div class="slds-modal__content slds-p-around_medium" style="height: 70vh;">
+                <iframe src={previewFileUrl} width="100%" height="100%" frameborder="0"></iframe>
+              </div>
+              <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
+                <lightning-button variant="neutral" label="Close" onclick={closePreviewModal}></lightning-button>
+                <a href={downloadUrl} target="_blank" download class="slds-button slds-button_brand">
+                  Download
+                </a>
+              </footer>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- UPLOAD MODAL -->
+        <template if:true={showUploadModal}>
+          <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <header class="slds-modal__header">
+                <button 
+                  class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                  title="Close" 
+                  onclick={handleUploadClosed}>
+                  <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                </button>
+                <h2 class="slds-text-heading_medium slds-hyphenate">Upload</h2>
+              </header>
+              <div class="slds-modal__content slds-p-around_medium">
+                <div style="margin:auto; width:50%">
+                  <div 
+                    class="drop-zone slds-box slds-theme_shade slds-text-align_center"
+                    ondrop={handleDrop}
+                    ondragover={handleDragOver}
+                    onclick={triggerFileInput}>
+                    <p class="slds-text-title_caps">Drop a file here or click to upload</p>
+                    <lightning-icon icon-name="utility:upload" size="medium" class="slds-m-top_small"></lightning-icon>
+                    <input
+                      type="file"
+                      accept={acceptedFormatsJoined}
+                      onchange={handleUploadFinished}
+                      class="hidden-file-input"
+                      lwc:ref="fileInput"/>
+                  </div>
+                </div>
+              </div>
+              <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={handleUploadClosed}>Cancel</button>
+              </footer>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- CREATE FOLDER MODAL -->
+        <template if:true={showCreateFolderModal}>
+          <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <header class="slds-modal__header">
+                <h2 class="slds-modal__title">Create Folder</h2>
+                <button 
+                  class="slds-button slds-button_icon slds-modal__close" 
+                  title="Close" 
+                  onclick={handleCreateFolderCancel}>
+                  <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                </button>
+              </header>
+              <div class="slds-modal__content slds-p-around_medium">
+                <lightning-input 
+                  label="Folder Name" 
+                  value={newFolderName} 
+                  onchange={handleFolderNameChange}>
+                </lightning-input>
+              </div>
+              <footer class="slds-modal__footer">
+                <lightning-button variant="neutral" label="Cancel" onclick={handleCreateFolderCancel}></lightning-button>
+                <lightning-button variant="brand" label="Create" onclick={handleCreateFolder}></lightning-button>
+              </footer>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- DELETE CONFIRM MODAL -->
+        <template if:true={showDeleteConfirmModal}>
+          <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <header class="slds-modal__header">
+                <button 
+                  class="slds-button slds-button_icon slds-modal__close" 
+                  title="Close" 
+                  onclick={cancelDelete}>
+                  <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                </button>
+                <h2 class="slds-modal__title">Confirm Delete</h2>
+              </header>
+              <div class="slds-modal__content slds-p-around_medium">
+                Are you sure you want to delete <strong>{deleteFileName}</strong>?
+              </div>
+              <footer class="slds-modal__footer slds-grid slds-grid_align-end">
+                <lightning-button variant="neutral" label="Cancel" onclick={cancelDelete}></lightning-button>
+                <lightning-button variant="destructive" label="Delete" onclick={confirmDelete}></lightning-button>
+              </footer>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+      </div>
+    </article>
+  </template>
+</template>
