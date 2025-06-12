@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuthProvider xmlns="http://soap.sforce.com/2006/04/metadata">
+    <authorizeUrl>https://login.microsoftonline.com/602e7afb-0704-46ac-afc9-b152311bc574/oauth2/v2.0/authorize</authorizeUrl>
+    <consumerKey>7143329f-8d8f-4609-b165-159ef92a2f5e</consumerKey>
+    <consumerSecret>Placeholder_Value</consumerSecret>
+    <defaultScopes>offline_access Files.ReadWrite.All Sites.Read.All User.Read openid profile</defaultScopes>
+    <friendlyName>MicrosoftGraph</friendlyName>
+    <includeOrgIdInIdentifier>false</includeOrgIdInIdentifier>
+    <isPkceEnabled>true</isPkceEnabled>
+    <providerType>OpenIdConnect</providerType>
+    <requireMfa>false</requireMfa>
+    <sendAccessTokenInHeader>true</sendAccessTokenInHeader>
+    <sendClientCredentialsInHeader>false</sendClientCredentialsInHeader>
+    <sendSecretInApis>true</sendSecretInApis>
+    <tokenUrl>https://login.microsoftonline.com/602e7afb-0704-46ac-afc9-b152311bc574/oauth2/v2.0/token</tokenUrl>
+</AuthProvider>

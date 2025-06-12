@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuthProvider xmlns="http://soap.sforce.com/2006/04/metadata">
+    <authorizeUrl>https://login.microsoftonline.com/common/oauth2/authorize?resource=https%3A%2F%2Fscoutcleanenergy.sharepoint.com&amp;prompt=login</authorizeUrl>
+    <consumerKey>f9951155-a860-4e57-b7df-3d950479c819</consumerKey>
+    <consumerSecret>Placeholder_Value</consumerSecret>
+    <friendlyName>SharePoint</friendlyName>
+    <includeOrgIdInIdentifier>false</includeOrgIdInIdentifier>
+    <isPkceEnabled>false</isPkceEnabled>
+    <providerType>OpenIdConnect</providerType>
+    <requireMfa>false</requireMfa>
+    <sendAccessTokenInHeader>true</sendAccessTokenInHeader>
+    <sendClientCredentialsInHeader>false</sendClientCredentialsInHeader>
+    <sendSecretInApis>true</sendSecretInApis>
+    <tokenUrl>https://login.microsoftonline.com/common/oauth2/token</tokenUrl>
+</AuthProvider>
