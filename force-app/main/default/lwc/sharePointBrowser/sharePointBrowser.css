@@ -249,9 +249,12 @@
   background-color: #f3f2f1; /* light neutral /* */
   border-radius: 6px;
   padding: 1.5rem;
+  width: 100%;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+/* sharePointBrowser.css */
 
 .ms-login-btn {
   display: inline-flex;
@@ -260,17 +263,34 @@
   color: #fff;
   border: none;
   border-radius: 4px;
-  /* more breathing room in MS style button */
   padding: .6rem 1.2rem;
   font-size: 1rem;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+
+  /* add opacity & transform to your transition */
+  transition: 
+    opacity 0.2s ease-in-out, 
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
+
+/* hover state */
+.ms-login-btn:hover {
+  opacity: 0.8;                  /* fade down slightly */
+  transform: translateY(-2px);   /* lift up a hair */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);  /* deepen the shadow */
+}
+
 
 .ms-login-button img {
   width: 18px;
   height: 18px;
   margin-right: 0.5rem;
+}
+
+.title {
+    font-weight:440;
+    font-size:1.17em;
 }
